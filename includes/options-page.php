@@ -90,19 +90,19 @@ function faq_blocks_register_acf_fields() {
 			'key'                   => 'group_faq_fields',
 			'title'                 => __( 'FAQ Details', 'faq-blocks' ),
 			'fields'                => array(
-			array(
-				'key'           => 'field_faq_excerpt',
-				'label'         => __( 'FAQ Answer (Short)', 'faq-blocks' ),
-				'name'          => 'faq_excerpt',
-				'type'          => 'wysiwyg',
-				'instructions'  => __( 'A short answer for the FAQ. This will be displayed in FAQ lists and blocks.', 'faq-blocks' ),
-				'required'      => 0,
-				'default_value' => '',
-				'tabs'          => 'all',
-				'toolbar'       => 'basic',
-				'media_upload'  => 0,
-				'delay'         => 1,
-			),
+				array(
+					'key'           => 'field_faq_excerpt',
+					'label'         => __( 'FAQ Answer (Short)', 'faq-blocks' ),
+					'name'          => 'faq_excerpt',
+					'type'          => 'wysiwyg',
+					'instructions'  => __( 'A short answer for the FAQ. This will be displayed in FAQ lists and blocks.', 'faq-blocks' ),
+					'required'      => 0,
+					'default_value' => '',
+					'tabs'          => 'all',
+					'toolbar'       => 'basic',
+					'media_upload'  => 0,
+					'delay'         => 1,
+				),
 			),
 			'location'              => array(
 				array(

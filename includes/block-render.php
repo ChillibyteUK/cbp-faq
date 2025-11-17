@@ -199,7 +199,7 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 }
 
 /**
- * Add FAQ Schema to single FAQ posts.
+ * Add FAQ Schema to single FAQ posts via JSON-LD.
  *
  * @return void
  */
@@ -217,15 +217,27 @@ function faq_blocks_add_single_faq_schema() {
 		$faq_excerpt = get_the_content();
 	}
 
-	// Add schema attributes to the body tag via filter.
-	add_filter( 'body_class', 'faq_blocks_add_schema_body_class' );
+	// Strip HTML tags for schema.
+	$answer_text = wp_strip_all_tags( $faq_excerpt );
 
-	// Store the FAQ data for template use.
-	global $faq_blocks_schema_data;
-	$faq_blocks_schema_data = array(
-		'question' => get_the_title(),
-		'answer'   => $faq_excerpt,
+	// Build JSON-LD schema.
+	$schema = array(
+		'@context'   => 'https://schema.org',
+		'@type'      => 'FAQPage',
+		'mainEntity' => array(
+			array(
+				'@type'          => 'Question',
+				'name'           => get_the_title(),
+				'acceptedAnswer' => array(
+					'@type' => 'Answer',
+					'text'  => $answer_text,
+				),
+			),
+		),
 	);
+
+	// Output JSON-LD in head.
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
 }
 add_action( 'wp_head', 'faq_blocks_add_single_faq_schema' );
 
@@ -237,9 +249,12 @@ add_action( 'wp_head', 'faq_blocks_add_single_faq_schema' );
  * @return array
  */
 function faq_blocks_add_schema_body_class( $classes ) {
-	$classes[] = 'faq-single-page';
+	if ( is_singular( 'faq' ) ) {
+		$classes[] = 'faq-single-page';
+	}
 	return $classes;
 }
+add_filter( 'body_class', 'faq_blocks_add_schema_body_class' );
 
 /**
  * Close the FAQ Page schema wrapper after content.

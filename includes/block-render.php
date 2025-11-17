@@ -209,16 +209,11 @@ function faq_blocks_add_single_faq_schema() {
 		return;
 	}
 
-	// Get the FAQ excerpt field.
-	$faq_excerpt = get_field( 'faq_excerpt' );
-
-	// If no excerpt, fall back to post content.
-	if ( empty( $faq_excerpt ) ) {
-		$faq_excerpt = get_the_content();
-	}
+	// Use the full post content for single FAQ pages.
+	$faq_content = get_the_content();
 
 	// Strip HTML tags for schema.
-	$answer_text = wp_strip_all_tags( $faq_excerpt );
+	$answer_text = wp_strip_all_tags( $faq_content );
 
 	// Build JSON-LD schema.
 	$schema = array(

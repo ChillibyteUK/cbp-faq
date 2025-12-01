@@ -95,6 +95,18 @@ function faq_blocks_register_block_fields() {
 					'return_format' => 'id',
 					'multiple'      => 0,
 				),
+				array(
+					'key'           => 'field_faq_show_title',
+					'label'         => __( 'Show Title', 'faq-blocks' ),
+					'name'          => 'show_title',
+					'type'          => 'true_false',
+					'instructions'  => __( 'Display category name as title above FAQ list.', 'faq-blocks' ),
+					'required'      => 0,
+					'default_value' => 0,
+					'ui'            => 1,
+					'ui_on_text'    => __( 'Yes', 'faq-blocks' ),
+					'ui_off_text'   => __( 'No', 'faq-blocks' ),
+				),
 			),
 			'location'              => array(
 				array(
@@ -202,10 +214,14 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 
 	// Get the selected category.
 	$category_id = get_field( 'faq_category' );
+	$show_title  = get_field( 'show_title' );
 
 	if ( empty( $category_id ) ) {
 		return;
 	}
+
+	// Get category term for title.
+	$category_term = get_term( $category_id, 'faq_category' );
 
 	// Query FAQs from the selected category.
 	$args = array(
@@ -246,6 +262,12 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 	?>
 	<div id="<?php echo esc_attr( $block_id ); ?>" class="faq-list-block <?php echo esc_attr( $align_class ); ?> <?php echo esc_attr( $custom_class ); ?>">
 		<?php
+		if ( $show_title && $category_term && ! is_wp_error( $category_term ) ) {
+			?>
+			<h2 class="faq-list-title"><?php echo esc_html( $category_term->name ); ?> FAQs</h2>
+			<?php
+		}
+
 		while ( $faq_query->have_posts() ) {
 			$faq_query->the_post();
 

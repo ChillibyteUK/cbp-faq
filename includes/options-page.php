@@ -63,6 +63,17 @@ function faq_blocks_register_acf_fields() {
 					'default_value' => 'faqs',
 					'placeholder'   => 'faqs',
 				),
+				array(
+					'key'           => 'field_faq_custom_css',
+					'label'         => __( 'Custom CSS', 'faq-blocks' ),
+					'name'          => 'faq_custom_css',
+					'type'          => 'textarea',
+					'instructions'  => __( 'Add custom CSS to style your FAQ blocks. Do not include &lt;style&gt; tags.', 'faq-blocks' ),
+					'required'      => 0,
+					'default_value' => '',
+					'placeholder'   => '.faq-list-block {\n    /* Your custom styles */\n}',
+					'rows'          => 10,
+				),
 			),
 			'location'              => array(
 				array(

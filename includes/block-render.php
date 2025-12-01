@@ -609,6 +609,13 @@ function faq_blocks_add_inline_styles() {
 			display: block;
 		}
 	';
+
+	// Add custom CSS from options page.
+	$custom_css = get_field( 'faq_custom_css', 'option' );
+	if ( ! empty( $custom_css ) ) {
+		$css .= '\n' . wp_strip_all_tags( $custom_css );
+	}
+
 	wp_add_inline_style( 'wp-block-library', $css );
 }
 add_action( 'wp_enqueue_scripts', 'faq_blocks_add_inline_styles' );

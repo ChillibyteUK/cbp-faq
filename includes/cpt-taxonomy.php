@@ -167,8 +167,16 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 		$faq_slug = 'faqs';
 	}
 
+	// Build new breadcrumb array.
+	$new_links = array();
+
+	// Add home link (always first in Yoast breadcrumbs).
+	if ( isset( $links[0] ) ) {
+		$new_links[] = $links[0];
+	}
+
 	// Create the FAQ archive breadcrumb.
-	$faq_crumb = array(
+	$new_links[] = array(
 		'url'  => home_url( '/' . $faq_slug . '/' ),
 		'text' => __( 'FAQs', 'faq-blocks' ),
 	);
@@ -176,33 +184,14 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 	// Get the FAQ category if it exists.
 	$terms = get_the_terms( get_the_ID(), 'faq_category' );
 	if ( $terms && ! is_wp_error( $terms ) ) {
-		$term           = array_shift( $terms );
-		$category_crumb = array(
+		$term        = array_shift( $terms );
+		$new_links[] = array(
 			'url'  => get_term_link( $term ),
 			'text' => $term->name,
 		);
 	}
 
-	// Build new breadcrumb array.
-	$new_links = array();
-
-	// Find and keep the home link (has no URL or is home URL).
-	foreach ( $links as $link ) {
-		if ( ! isset( $link['url'] ) || home_url( '/' ) === $link['url'] ) {
-			$new_links[] = $link;
-			break;
-		}
-	}
-
-	// Add FAQ archive link.
-	$new_links[] = $faq_crumb;
-
-	// Add category link if it exists.
-	if ( isset( $category_crumb ) ) {
-		$new_links[] = $category_crumb;
-	}
-
-	// Add the current page (last item - has no URL).
+	// Add the current page (last item in original array - no URL key).
 	$last_link = end( $links );
 	if ( $last_link && ! isset( $last_link['url'] ) ) {
 		$new_links[] = $last_link;

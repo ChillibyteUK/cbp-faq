@@ -147,3 +147,63 @@ function faq_blocks_flush_rewrites_on_slug_change( $value, $post_id, $field ) {
 	return $value;
 }
 add_filter( 'acf/update_value', 'faq_blocks_flush_rewrites_on_slug_change', 10, 3 );
+
+/**
+ * Add FAQ post type to Yoast breadcrumbs.
+ *
+ * @param array $links The breadcrumb links.
+ *
+ * @return array
+ */
+function faq_blocks_yoast_breadcrumbs( $links ) {
+	// Only modify breadcrumbs for FAQ single posts.
+	if ( ! is_singular( 'faq' ) ) {
+		return $links;
+	}
+
+	// Get the FAQ slug from options.
+	$faq_slug = get_field( 'faq_slug', 'option' );
+	if ( empty( $faq_slug ) ) {
+		$faq_slug = 'faqs';
+	}
+
+	// Create the FAQ archive breadcrumb.
+	$faq_crumb = array(
+		'url'  => home_url( '/' . $faq_slug . '/' ),
+		'text' => __( 'FAQs', 'faq-blocks' ),
+	);
+
+	// Get the FAQ category if it exists.
+	$terms = get_the_terms( get_the_ID(), 'faq_category' );
+	if ( $terms && ! is_wp_error( $terms ) ) {
+		$term           = array_shift( $terms );
+		$category_crumb = array(
+			'url'  => get_term_link( $term ),
+			'text' => $term->name,
+		);
+	}
+
+	// Build new breadcrumb array.
+	$new_links = array();
+
+	// Keep the home link (first item).
+	if ( ! empty( $links[0] ) ) {
+		$new_links[] = $links[0];
+	}
+
+	// Add FAQ archive link.
+	$new_links[] = $faq_crumb;
+
+	// Add category link if it exists.
+	if ( isset( $category_crumb ) ) {
+		$new_links[] = $category_crumb;
+	}
+
+	// Add the current page (last item from original links).
+	if ( ! empty( $links ) ) {
+		$new_links[] = end( $links );
+	}
+
+	return $new_links;
+}
+add_filter( 'wpseo_breadcrumb_links', 'faq_blocks_yoast_breadcrumbs' );

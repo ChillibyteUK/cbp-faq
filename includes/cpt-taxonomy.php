@@ -186,9 +186,12 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 	// Build new breadcrumb array.
 	$new_links = array();
 
-	// Keep the home link (first item).
-	if ( ! empty( $links[0] ) ) {
-		$new_links[] = $links[0];
+	// Find and keep the home link (has no URL or is home URL).
+	foreach ( $links as $link ) {
+		if ( ! isset( $link['url'] ) || home_url( '/' ) === $link['url'] ) {
+			$new_links[] = $link;
+			break;
+		}
 	}
 
 	// Add FAQ archive link.
@@ -199,9 +202,10 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 		$new_links[] = $category_crumb;
 	}
 
-	// Add the current page (last item from original links).
-	if ( ! empty( $links ) ) {
-		$new_links[] = end( $links );
+	// Add the current page (last item - has no URL).
+	$last_link = end( $links );
+	if ( $last_link && ! isset( $last_link['url'] ) ) {
+		$new_links[] = $last_link;
 	}
 
 	return $new_links;

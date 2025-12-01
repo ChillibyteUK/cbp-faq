@@ -160,7 +160,7 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 	if ( ! is_singular( 'faq' ) ) {
 		return $links;
 	}
-
+error_log( 'FAQ Breadcrumbs - Original links: ' . print_r( $links, true ) );
 	// Get the FAQ slug from options.
 	$faq_slug = get_field( 'faq_slug', 'option' );
 	if ( empty( $faq_slug ) ) {

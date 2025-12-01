@@ -517,6 +517,10 @@ add_action( 'wp_footer', 'faq_blocks_close_schema_wrapper', 999 );
  * @return void
  */
 function faq_blocks_add_inline_styles() {
+	// Register a dummy stylesheet handle for our inline styles.
+	wp_register_style( 'faq-blocks-styles', false, array(), FAQ_BLOCKS_VERSION );
+	wp_enqueue_style( 'faq-blocks-styles' );
+
 	$css = '
 		.faq-page-wrapper {
 			display: contents;
@@ -613,10 +617,10 @@ function faq_blocks_add_inline_styles() {
 	// Add custom CSS from options page.
 	$custom_css = get_field( 'faq_custom_css', 'option' );
 	if ( ! empty( $custom_css ) ) {
-		$css .= '\n' . wp_strip_all_tags( $custom_css );
+		$css .= "\n" . wp_strip_all_tags( $custom_css );
 	}
 
-	wp_add_inline_style( 'wp-block-library', $css );
+	wp_add_inline_style( 'faq-blocks-styles', $css );
 }
 add_action( 'wp_enqueue_scripts', 'faq_blocks_add_inline_styles' );
 add_action( 'admin_enqueue_scripts', 'faq_blocks_add_inline_styles' );

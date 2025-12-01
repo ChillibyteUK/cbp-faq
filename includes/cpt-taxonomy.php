@@ -156,37 +156,31 @@ add_filter( 'acf/update_value', 'faq_blocks_flush_rewrites_on_slug_change', 10, 
  * @return array
  */
 function faq_blocks_yoast_breadcrumbs( $links ) {
-	error_log( 'FAQ Breadcrumbs - Incoming links: ' . print_r( $links, true ) );
 	// Only modify breadcrumbs for FAQ single posts.
 	if ( ! is_singular( 'faq' ) ) {
 		return $links;
 	}
-error_log( 'FAQ Breadcrumbs - Original links: ' . print_r( $links, true ) );
 	// Get the FAQ slug from options.
 	$faq_slug = get_field( 'faq_slug', 'option' );
 	if ( empty( $faq_slug ) ) {
 		$faq_slug = 'faqs';
 	}
 
-	// Build new breadcrumb array.
-	$new_links = array();
-
-	// Add home link (always first in Yoast breadcrumbs).
-	if ( isset( $links[0] ) ) {
-		$new_links[] = $links[0];
-	}
-
-	// Create the FAQ archive breadcrumb.
-	$new_links[] = array(
-		'url'  => home_url( '/' . $faq_slug . '/' ),
-		'text' => __( 'FAQs', 'faq-blocks' ),
-	);
-
-	// Add the current page title.
-	$new_links[] = array(
-		'text' => get_the_title(),
+	// Build breadcrumb array from scratch to ensure order and content.
+	$new_links = array(
+		array(
+			'url'  => home_url( '/' ),
+			'text' => __( 'Home', 'faq-blocks' ),
+		),
+		array(
+			'url'  => home_url( '/' . $faq_slug . '/' ),
+			'text' => __( 'FAQs', 'faq-blocks' ),
+		),
+		array(
+			'text' => get_the_title(),
+		),
 	);
 
 	return $new_links;
 }
-add_filter( 'wpseo_breadcrumb_links', 'faq_blocks_yoast_breadcrumbs', 20 );
+add_filter( 'wpseo_breadcrumb_links', 'faq_blocks_yoast_breadcrumbs', 99 );

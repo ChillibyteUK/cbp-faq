@@ -188,4 +188,4 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 
 	return $new_links;
 }
-add_filter( 'wpseo_breadcrumb_links', 'faq_blocks_yoast_breadcrumbs' );
+add_filter( 'wpseo_breadcrumb_links', 'faq_blocks_yoast_breadcrumbs', 20 );

@@ -156,6 +156,7 @@ add_filter( 'acf/update_value', 'faq_blocks_flush_rewrites_on_slug_change', 10, 
  * @return array
  */
 function faq_blocks_yoast_breadcrumbs( $links ) {
+	error_log( 'FAQ Breadcrumbs - Incoming links: ' . print_r( $links, true ) );
 	// Only modify breadcrumbs for FAQ single posts.
 	if ( ! is_singular( 'faq' ) ) {
 		return $links;

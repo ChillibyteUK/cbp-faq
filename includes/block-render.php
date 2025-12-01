@@ -25,7 +25,7 @@ function faq_blocks_register_acf_blocks() {
 	acf_register_block_type(
 		array(
 			'name'            => 'faq-list',
-			'title'           => __( 'FAQ List', 'faq-blocks' ),
+			'title'           => __( 'CBP FAQ List', 'faq-blocks' ),
 			'description'     => __( 'Display a list of FAQs from a selected category with FAQ Schema.', 'faq-blocks' ),
 			'render_callback' => 'faq_blocks_render_faq_list_block',
 			'category'        => 'common',
@@ -33,9 +33,10 @@ function faq_blocks_register_acf_blocks() {
 			'keywords'        => array( 'faq', 'question', 'answer' ),
 			'mode'            => 'edit',
 			'supports'        => array(
-				'align'  => true,
-				'anchor' => true,
-				'mode'   => false,
+				'align'           => true,
+				'anchor'          => true,
+				'mode'            => false,
+				'customClassName' => true,
 			),
 		)
 	);
@@ -44,7 +45,7 @@ function faq_blocks_register_acf_blocks() {
 	acf_register_block_type(
 		array(
 			'name'            => 'faq-tabs',
-			'title'           => __( 'FAQ Tabs', 'faq-blocks' ),
+			'title'           => __( 'CBP FAQ Tabs', 'faq-blocks' ),
 			'description'     => __( 'Display FAQs in tabs by category with FAQ Schema.', 'faq-blocks' ),
 			'render_callback' => 'faq_blocks_render_faq_tabs_block',
 			'category'        => 'common',
@@ -52,9 +53,10 @@ function faq_blocks_register_acf_blocks() {
 			'keywords'        => array( 'faq', 'tabs', 'category' ),
 			'mode'            => 'edit',
 			'supports'        => array(
-				'align'  => true,
-				'anchor' => true,
-				'mode'   => false,
+				'align'           => true,
+				'anchor'          => true,
+				'mode'            => false,
+				'customClassName' => true,
 			),
 		)
 	);
@@ -232,6 +234,9 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 	// Get block alignment class.
 	$align_class = ! empty( $block['align'] ) ? 'align' . $block['align'] : '';
 
+	// Get custom CSS classes.
+	$custom_class = ! empty( $block['className'] ) ? $block['className'] : '';
+
 	// Only the first instance opens the FAQPage schema wrapper.
 	if ( $is_first_instance ) {
 		echo '<div class="faq-page-wrapper" itemscope itemtype="https://schema.org/FAQPage">';
@@ -239,7 +244,7 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 
 	// Start block output without FAQPage schema (it's in the wrapper above).
 	?>
-	<div id="<?php echo esc_attr( $block_id ); ?>" class="faq-list-block <?php echo esc_attr( $align_class ); ?>">
+	<div id="<?php echo esc_attr( $block_id ); ?>" class="faq-list-block <?php echo esc_attr( $align_class ); ?> <?php echo esc_attr( $custom_class ); ?>">
 		<?php
 		while ( $faq_query->have_posts() ) {
 			$faq_query->the_post();
@@ -305,6 +310,9 @@ function faq_blocks_render_faq_tabs_block( $block, $content = '', $is_preview = 
 	// Get block alignment class.
 	$align_class = ! empty( $block['align'] ) ? 'align' . $block['align'] : '';
 
+	// Get custom CSS classes.
+	$custom_class = ! empty( $block['className'] ) ? $block['className'] : '';
+
 	// Only the first instance opens the FAQPage schema wrapper.
 	if ( $is_first_instance ) {
 		echo '<div class="faq-page-wrapper" itemscope itemtype="https://schema.org/FAQPage">';
@@ -312,7 +320,7 @@ function faq_blocks_render_faq_tabs_block( $block, $content = '', $is_preview = 
 
 	// Start block output.
 	?>
-	<div id="<?php echo esc_attr( $block_id ); ?>" class="faq-tabs-block <?php echo esc_attr( $align_class ); ?>" data-has-search="<?php echo esc_attr( $include_search ? 'true' : 'false' ); ?>">
+	<div id="<?php echo esc_attr( $block_id ); ?>" class="faq-tabs-block <?php echo esc_attr( $align_class ); ?> <?php echo esc_attr( $custom_class ); ?>" data-has-search="<?php echo esc_attr( $include_search ? 'true' : 'false' ); ?>">
 		<div class="faq-tabs-nav">
 			<?php
 			$first = true;

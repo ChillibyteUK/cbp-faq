@@ -617,7 +617,11 @@ function faq_blocks_add_inline_styles() {
 	// Add custom CSS from options page.
 	$custom_css = get_field( 'faq_custom_css', 'option' );
 	if ( ! empty( $custom_css ) ) {
-		$css .= "\n" . wp_strip_all_tags( $custom_css );
+		// Strip HTML tags and normalize whitespace.
+		$custom_css = wp_strip_all_tags( $custom_css );
+		// Replace literal \n with actual newlines in case they were copy-pasted.
+		$custom_css = str_replace( '\n', "\n", $custom_css );
+		$css       .= "\n" . $custom_css;
 	}
 
 	wp_add_inline_style( 'faq-blocks-styles', $css );

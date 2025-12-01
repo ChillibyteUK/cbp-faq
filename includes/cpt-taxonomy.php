@@ -181,21 +181,10 @@ function faq_blocks_yoast_breadcrumbs( $links ) {
 		'text' => __( 'FAQs', 'faq-blocks' ),
 	);
 
-	// Get the FAQ category if it exists.
-	$terms = get_the_terms( get_the_ID(), 'faq_category' );
-	if ( $terms && ! is_wp_error( $terms ) ) {
-		$term        = array_shift( $terms );
-		$new_links[] = array(
-			'url'  => get_term_link( $term ),
-			'text' => $term->name,
-		);
-	}
-
-	// Add the current page (last item in original array - no URL key).
-	$last_link = end( $links );
-	if ( $last_link && ! isset( $last_link['url'] ) ) {
-		$new_links[] = $last_link;
-	}
+	// Add the current page title.
+	$new_links[] = array(
+		'text' => get_the_title(),
+	);
 
 	return $new_links;
 }

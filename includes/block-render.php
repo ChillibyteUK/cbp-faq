@@ -272,11 +272,11 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 			$faq_query->the_post();
 
 			// Get the FAQ excerpt field.
-			$faq_excerpt = get_field( 'faq_excerpt', get_the_ID() );
+			$faq_excerpt  = get_field( 'faq_excerpt', get_the_ID() );
 			$post_content = get_the_content();
 
 			// Check if post has primary content (beyond the excerpt).
-			$has_primary_content = ! empty( trim( strip_tags( $post_content ) ) );
+			$has_primary_content = ! empty( trim( wp_strip_all_tags( $post_content ) ) );
 
 			// If no excerpt, fall back to post content.
 			if ( empty( $faq_excerpt ) ) {
@@ -419,12 +419,11 @@ function faq_blocks_render_faq_tabs_block( $block, $content = '', $is_preview = 
 						$faq_query->the_post();
 
 						// Get the FAQ excerpt field.
-						$faq_excerpt = get_field( 'faq_excerpt', get_the_ID() );
+						$faq_excerpt  = get_field( 'faq_excerpt', get_the_ID() );
 						$post_content = get_the_content();
 
 						// Check if post has primary content (beyond the excerpt).
-						$has_primary_content = ! empty( trim( strip_tags( $post_content ) ) );
-
+						$has_primary_content = ! empty( trim( wp_strip_all_tags( $post_content ) ) );
 						// If no excerpt, fall back to post content.
 						if ( empty( $faq_excerpt ) ) {
 							$faq_excerpt = $post_content;

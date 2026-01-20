@@ -273,17 +273,28 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 
 			// Get the FAQ excerpt field.
 			$faq_excerpt = get_field( 'faq_excerpt', get_the_ID() );
+			$post_content = get_the_content();
+
+			// Check if post has primary content (beyond the excerpt).
+			$has_primary_content = ! empty( trim( strip_tags( $post_content ) ) );
 
 			// If no excerpt, fall back to post content.
 			if ( empty( $faq_excerpt ) ) {
-				$faq_excerpt = get_the_content();
+				$faq_excerpt = $post_content;
 			}
+
+			// Only link title if there's primary content to view.
+			$should_link_title = $has_primary_content;
 			?>
 			<div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 				<h3 class="faq-question" itemprop="name">
-					<a href="<?php echo esc_url( get_permalink() ); ?>">
+					<?php if ( $should_link_title ) : ?>
+						<a href="<?php echo esc_url( get_permalink() ); ?>">
+							<?php the_title(); ?>
+						</a>
+					<?php else : ?>
 						<?php the_title(); ?>
-					</a>
+					<?php endif; ?>
 				</h3>
 				<div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 					<div itemprop="text">
@@ -409,17 +420,28 @@ function faq_blocks_render_faq_tabs_block( $block, $content = '', $is_preview = 
 
 						// Get the FAQ excerpt field.
 						$faq_excerpt = get_field( 'faq_excerpt', get_the_ID() );
+						$post_content = get_the_content();
+
+						// Check if post has primary content (beyond the excerpt).
+						$has_primary_content = ! empty( trim( strip_tags( $post_content ) ) );
 
 						// If no excerpt, fall back to post content.
 						if ( empty( $faq_excerpt ) ) {
-							$faq_excerpt = get_the_content();
+							$faq_excerpt = $post_content;
 						}
+
+						// Only link title if there's primary content to view.
+						$should_link_title = $has_primary_content;
 						?>
 						<div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
 							<h3 class="faq-question" itemprop="name">
-								<a href="<?php echo esc_url( get_permalink() ); ?>">
+								<?php if ( $should_link_title ) : ?>
+									<a href="<?php echo esc_url( get_permalink() ); ?>">
+										<?php the_title(); ?>
+									</a>
+								<?php else : ?>
 									<?php the_title(); ?>
-								</a>
+								<?php endif; ?>
 							</h3>
 							<div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
 								<div itemprop="text">

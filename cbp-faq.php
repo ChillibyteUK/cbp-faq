@@ -3,7 +3,7 @@
  * Plugin Name: FAQ Blocks
  * Plugin URI: https://github.com/ChillibyteUK/cbp-faq
  * Description: A reusable WordPress plugin that registers a custom FAQ post type with taxonomy, ACF fields, and a dynamic Gutenberg block with FAQ Schema support.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: ChillibyteUK - DS
  * Author URI: https://github.com/ChillibyteUK
  * Text Domain: faq-blocks
@@ -66,6 +66,7 @@ class FAQ_Blocks_Plugin {
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/cpt-taxonomy.php';
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/options-page.php';
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/block-render.php';
+		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/template-loader.php';
 	}
 
 	/**

@@ -22,6 +22,13 @@ function faq_blocks_template_loader( $template ) {
 		return $template;
 	}
 
+	// Check if plugin template is disabled in settings.
+	$use_plugin_template = get_field( 'faq_use_plugin_template', 'option' );
+	if ( empty( $use_plugin_template ) ) {
+		// Plugin template is disabled, use theme's default.
+		return $template;
+	}
+
 	// Check if theme has single-faq.php - if so, use it.
 	$theme_template = locate_template( array( 'single-faq.php' ) );
 	if ( $theme_template ) {

@@ -64,6 +64,18 @@ function faq_blocks_register_acf_fields() {
 					'placeholder'   => 'faqs',
 				),
 				array(
+					'key'           => 'field_faq_use_plugin_template',
+					'label'         => __( 'Use Plugin Template', 'faq-blocks' ),
+					'name'          => 'faq_use_plugin_template',
+					'type'          => 'true_false',
+					'instructions'  => __( 'Enable to use the plugin\'s built-in single-faq.php template. When disabled, FAQs will use the theme\'s default template (single.php or single-faq.php if provided).', 'faq-blocks' ),
+					'required'      => 0,
+					'default_value' => 1,
+					'ui'            => 1,
+					'ui_on_text'    => __( 'Enabled', 'faq-blocks' ),
+					'ui_off_text'   => __( 'Disabled', 'faq-blocks' ),
+				),
+				array(
 					'key'           => 'field_faq_custom_css',
 					'label'         => __( 'Custom CSS', 'faq-blocks' ),
 					'name'          => 'faq_custom_css',

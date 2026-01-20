@@ -48,7 +48,7 @@ get_header();
 			$categories = get_the_terms( get_the_ID(), 'faq_category' );
 			if ( $categories && ! is_wp_error( $categories ) ) :
 				?>
-				<footer class="entry-footer">
+				<div class="entry-footer">
 					<div class="faq-categories">
 						<span class="faq-categories-label"><?php esc_html_e( 'Categories:', 'faq-blocks' ); ?></span>
 						<?php
@@ -63,7 +63,7 @@ get_header();
 						echo implode( ', ', $category_links ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						?>
 					</div>
-				</footer>
+				</div>
 			<?php endif; ?>
 
 		</article>

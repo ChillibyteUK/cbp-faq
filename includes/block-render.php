@@ -483,7 +483,7 @@ function faq_blocks_add_single_faq_schema() {
 	$schema = array(
 		'@context'   => 'https://schema.org',
 		'@type'      => 'FAQPage',
-		'itemListElement' => array(
+		'mainEntity' => array(
 			array(
 				'@type'          => 'Question',
 				'name'           => get_the_title(),

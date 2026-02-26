@@ -76,6 +76,7 @@ class FAQ_Blocks_Plugin {
 	 */
 	private function init_hooks() {
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_filter( 'wpseo_schema_webpage', array( $this, 'maybe_remove_yoast_breadcrumb_schema' ) );
 	}
 
 	/**
@@ -89,6 +90,20 @@ class FAQ_Blocks_Plugin {
 			false,
 			dirname( plugin_basename( __FILE__ ) ) . '/languages'
 		);
+	}
+
+	/**
+	 * Remove Yoast breadcrumb schema on single FAQ pages.
+	 *
+	 * @param array $data WebPage schema data.
+	 * @return array
+	 */
+	public function maybe_remove_yoast_breadcrumb_schema( $data ) {
+		if ( is_singular( 'faq' ) && isset( $data['breadcrumb'] ) ) {
+			unset( $data['breadcrumb'] );
+		}
+
+		return $data;
 	}
 }
 

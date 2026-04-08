@@ -255,7 +255,7 @@ function faq_blocks_render_faq_list_block( $block, $content = '', $is_preview = 
 
 	// Only the first instance opens the FAQPage schema wrapper.
 	if ( $is_first_instance ) {
-		echo '<div class="faq-page-wrapper" itemscope itemtype="https://schema.org/FAQPage">';
+		echo '<div id="faq-section" class="faq-page-wrapper" itemscope itemtype="https://schema.org/FAQPage">';
 	}
 
 	// Start block output without FAQPage schema (it's in the wrapper above).
@@ -364,7 +364,9 @@ function faq_blocks_render_faq_tabs_block( $block, $content = '', $is_preview = 
 					?>
 					<button class="faq-tab-button<?php echo esc_attr( $active_class ); ?>" 
 							data-tab="tab-<?php echo esc_attr( $cat_id ); ?>"
-							data-term-name="<?php echo esc_attr( $term->name ); ?>">
+							data-term-name="<?php echo esc_attr( $term->name ); ?>"
+        					data-tab-slug="<?php echo esc_attr( sanitize_title( $term->name ) ); ?>"
+							>
 						<?php echo esc_html( $term->name ); ?>
 					</button>
 					<?php
@@ -665,59 +667,81 @@ function faq_blocks_enqueue_scripts() {
 				const buttons = block.querySelectorAll('.faq-tab-button');
 				const searchInput = block.querySelector('.faq-search-input');
 				
-				// Update search placeholder based on active tab
 				function updateSearchPlaceholder(termName) {
 					if (searchInput) {
 						searchInput.placeholder = 'Search ' + termName + ' FAQs...';
 					}
 				}
+
+				function activateTab(button, updateHash = false) {
+					if (!button) return;
+
+					const tabId = button.getAttribute('data-tab');
+					const termName = button.getAttribute('data-term-name');
+					const tabSlug = button.getAttribute('data-tab-slug');
+					const parentBlock = button.closest('.faq-tabs-block');
+
+					parentBlock.querySelectorAll('.faq-tab-button').forEach(function(btn) {
+						btn.classList.remove('active');
+					});
+					parentBlock.querySelectorAll('.faq-tab-content').forEach(function(content) {
+						content.classList.remove('active');
+					});
+
+					button.classList.add('active');
+
+					const targetTab = parentBlock.querySelector('#' + tabId);
+					if (targetTab) {
+						targetTab.classList.add('active');
+					}
+
+					updateSearchPlaceholder(termName);
+
+					if (searchInput) {
+						searchInput.value = '';
+						filterFAQs(parentBlock, '');
+					}
+
+					if (updateHash && tabSlug) {
+						if (history.replaceState) {
+							history.replaceState(null, null, '#' + tabSlug);
+						} else {
+							window.location.hash = tabSlug;
+						}
+					}
+				}
 				
-				// Set initial placeholder
 				const activeButton = block.querySelector('.faq-tab-button.active');
 				if (activeButton) {
 					updateSearchPlaceholder(activeButton.getAttribute('data-term-name'));
 				}
 				
-				// Tab switching
 				buttons.forEach(function(button) {
 					button.addEventListener('click', function(e) {
 						e.preventDefault();
-						const tabId = this.getAttribute('data-tab');
-						const termName = this.getAttribute('data-term-name');
-						const parentBlock = this.closest('.faq-tabs-block');
-						
-						// Remove active class from all buttons and tabs
-						parentBlock.querySelectorAll('.faq-tab-button').forEach(function(btn) {
-							btn.classList.remove('active');
-						});
-						parentBlock.querySelectorAll('.faq-tab-content').forEach(function(content) {
-							content.classList.remove('active');
-						});
-						
-						// Add active class to clicked button and corresponding tab
-						this.classList.add('active');
-						const targetTab = parentBlock.querySelector('#' + tabId);
-						if (targetTab) {
-							targetTab.classList.add('active');
-						}
-						
-						// Update search placeholder
-						updateSearchPlaceholder(termName);
-						
-						// Reset search when switching tabs
-						if (searchInput) {
-							searchInput.value = '';
-							filterFAQs(parentBlock, '');
-						}
+						activateTab(this, true);
 					});
 				});
 				
-				// Search functionality
 				if (searchInput) {
 					searchInput.addEventListener('input', function() {
 						const searchTerm = this.value.toLowerCase();
 						filterFAQs(block, searchTerm);
 					});
+				}
+
+				// Activate tab from URL hash on load
+				const hash = window.location.hash ? window.location.hash.substring(1) : '';
+				if (hash) {
+					const matchingButton = block.querySelector('.faq-tab-button[data-tab-slug=\"' + hash + '\"]');
+					if (matchingButton) {
+						activateTab(matchingButton, false);
+
+						// Scroll the FAQ block into view after activation
+						setTimeout(function() {
+							block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 100);
+					}
 				}
 			});
 		}
@@ -741,7 +765,6 @@ function faq_blocks_enqueue_scripts() {
 				}
 			});
 			
-			// Show/hide no results message
 			let noResults = activeTab.querySelector('.faq-no-results');
 			if (visibleCount === 0 && searchTerm !== '') {
 				if (!noResults) {

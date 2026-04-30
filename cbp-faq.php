@@ -67,6 +67,7 @@ class FAQ_Blocks_Plugin {
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/options-page.php';
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/block-render.php';
 		require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/template-loader.php';
+        require_once FAQ_BLOCKS_PLUGIN_DIR . 'includes/shortcodes.php';
 	}
 
 	/**
